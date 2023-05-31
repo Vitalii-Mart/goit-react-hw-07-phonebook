@@ -29,12 +29,11 @@ const ContactForm = () => {
 
     if (!existingContact) {
       dispatch(addContact({ name, number, id: shortid.generate() }));
+      setName('');
+      setNumber('');
     } else {
       alert(`${name} is already in contacts`);
     }
-
-    setName('');
-    setNumber('');
   };
 
   return (
