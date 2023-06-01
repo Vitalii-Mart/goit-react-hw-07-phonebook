@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import shortid from 'shortid';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from 'redux/contactsSlice';
 import { Form, Input, Button, Label } from './ContactForm.styled';
+import { addContact } from 'services/contactsApi';
+import { getContacts } from 'redux/selectors';
+import shortid from 'shortid';
 
 const ContactForm = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts);
+  const contacts = useSelector(getContacts);
 
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+
+  const nameInputId = shortid.generate();
+  const numberInputId = shortid.generate();
 
   const handleInputChange = evt => {
     if (evt.target.name === 'name') {
@@ -23,12 +27,9 @@ const ContactForm = () => {
   const handleSubmit = evt => {
     evt.preventDefault();
 
-    const existingContact = contacts.find(contact =>
-      contact.name.toLowerCase() === name.toLowerCase()
-    );
-
-    if (!existingContact) {
-      dispatch(addContact({ name, number, id: shortid.generate() }));
+    
+    if (!contacts.find(el => el.name === name)) {
+      dispatch(addContact({ name: name, phone: number}));
       setName('');
       setNumber('');
     } else {
@@ -39,25 +40,25 @@ const ContactForm = () => {
   return (
     <>
        <Form onSubmit={handleSubmit}>
-        <Label htmlFor="name">Name</Label>
+        <Label htmlFor="nameInputId">Name</Label>
         <Input
           type="text"
           value={name}
           onChange={handleInputChange}
           name="name"
-          id="name"
+          id={nameInputId}
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
         />
 
-        <Label htmlFor="number">Number</Label>
+        <Label htmlFor="numberInputId">Number</Label>
         <Input
           type="tel"
           value={number}
           onChange={handleInputChange}
           name="number"
-          id="number"
+          id={numberInputId}
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required

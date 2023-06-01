@@ -3,10 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { filterContact  } from '../../redux/contactsSlice';
 import PropTypes from 'prop-types';
 import { Label, Input } from './Filter.styled';
+import { getFilterValue } from 'redux/selectors';
 
 const Filter = () => {
   const dispatch = useDispatch();
-  const filter = useSelector(state => state.filter);
+  const filter = useSelector(getFilterValue);
 
   const handleFilterChange = (event) => {
     const value = event.target.value.toLowerCase();
