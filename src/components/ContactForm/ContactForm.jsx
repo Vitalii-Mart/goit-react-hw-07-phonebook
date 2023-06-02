@@ -27,14 +27,23 @@ const ContactForm = () => {
   const handleSubmit = evt => {
     evt.preventDefault();
 
-    
-    if (!contacts.find(el => el.name === name)) {
-      dispatch(addContact({ name: name, phone: number}));
+    const existingContact = contacts.find(el => el.name.toLowerCase() === name.toLowerCase());
+    if (!existingContact) {
+      dispatch(addContact({ name: name, phone: number }));
       setName('');
       setNumber('');
     } else {
       alert(`${name} is already in contacts`);
     }
+
+    
+    // if (!contacts.find(el => el.name === name)) {
+    //   dispatch(addContact({ name: name, phone: number}));
+    //   setName('');
+    //   setNumber('');
+    // } else {
+    //   alert(`${name} is already in contacts`);
+    // }
   };
 
   return (
